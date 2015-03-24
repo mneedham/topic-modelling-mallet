@@ -1,19 +1,28 @@
 import csv
 import itertools
 import pandas as pd
+import numpy as np
+
+import matplotlib
+matplotlib.use('TkAgg')
+import pylab
+import matplotlib.pyplot as plt
+pylab.show()
+
 
 variations = [
     {"topics": 10, "stop_words": "all.stop.words"},
-    {"topics": 15, "stop_words": "all.stop.words"},
-    {"topics": 20, "stop_words": "all.stop.words"},
-    {"topics": 30, "stop_words": "all.stop.words"},
     {"topics": 10, "stop_words": "main.stop.words"},
+    {"topics": 15, "stop_words": "all.stop.words"},
     {"topics": 15, "stop_words": "main.stop.words"},
+    {"topics": 20, "stop_words": "all.stop.words"},
     {"topics": 20, "stop_words": "main.stop.words"},
+    {"topics": 30, "stop_words": "all.stop.words"},
     {"topics": 30, "stop_words": "main.stop.words"}
 ]
 
-for variation in variations:
+for count,variation in enumerate(variations):
+    count = count+1
     episodes = {}
     with open("episodes_full.csv", "r") as file:
         reader = csv.DictReader(file)
@@ -41,7 +50,8 @@ for variation in variations:
                 episodes[episode_id]["Topics"].append({"topic": topic_id, "score": score})
 
 
-    flattened_episodes = [{ "NumberInSeason": episode["NumberInSeason"],
+    flattened_episodes = [{
+                            "NumberInSeason": episode["NumberInSeason"],
                             "Title": episode["Title"],
                             "TopicId": topic["topic"],
                             "TopicScore": topic["score"]
@@ -50,4 +60,18 @@ for variation in variations:
                           for topic in episode["Topics"]]
 
     df = pd.DataFrame(flattened_episodes)
-    print df.groupby(["TopicId"]).size().order(ascending = False)
+    topics = df.groupby(["TopicId"]).size()
+    ordered_topics = sorted(topics.iteritems(), key = lambda x: int(x[0]))
+    print len(ordered_topics)
+
+    ax = plt.subplot(4,2,count)
+    width = 0.35
+
+    x = [int(x[0]) for x in ordered_topics]
+
+    ind = np.arange(len(x))
+    ax.bar(ind + (width / 2), [x[1] for x in ordered_topics], width, color='blue')
+    plt.xticks(ind + width, [int(x[0]) for x in ordered_topics])
+    ax.set_xticklabels(ind, rotation=45)
+
+plt.show()
