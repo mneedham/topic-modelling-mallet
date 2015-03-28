@@ -9,7 +9,6 @@ import pylab
 import matplotlib.pyplot as plt
 pylab.show()
 
-
 variations = [
     {"topics": 10, "stop_words": "all.stop.words"},
     {"topics": 10, "stop_words": "main.stop.words"},
@@ -73,5 +72,16 @@ for count,variation in enumerate(variations):
     ax.bar(ind + (width / 2), [x[1] for x in ordered_topics], width, color='blue')
     plt.xticks(ind + width, [int(x[0]) for x in ordered_topics])
     ax.set_xticklabels(ind, rotation=45)
+    plt.xlabel('Topic Number')
+    plt.ylabel('# of documents')
+
+    left  = 0.125  # the left side of the subplots of the figure
+    right = 0.9    # the right side of the subplots of the figure
+    bottom = 0.1   # the bottom of the subplots of the figure
+    top = 0.9      # the top of the subplots of the figure
+    wspace = 0.2   # the amount of width reserved for blank space between subplots
+    hspace = 0.5   # the amount of height reserved for white space between subplots
+    plt.subplots_adjust(left=left, bottom=bottom, right=right, top=top, wspace=wspace, hspace=hspace)
+
 
 plt.show()

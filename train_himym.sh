@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 train_model() {
   ./mallet-2.0.7/bin/mallet import-dir \
     --input mallet-2.0.7/sample-data/himym \
@@ -17,6 +16,7 @@ extract_topics() {
     --output-state himym-topic-state.gz \
     --output-topic-keys output/himym_${1}_${3}_keys.txt \
     --output-doc-topics output/himym_${1}_${3}_composition.txt
+    --word-topic-counts-file output/himym_${1}_${3}_word_topic_counts.txt
 }
 
 train_model "stop_words.txt" "output/himym.mallet"
